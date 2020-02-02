@@ -1,26 +1,107 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Layout, Menu, Icon } from 'antd';
+import { Switch, Route, withRouter, NavLink } from 'react-router-dom';
+import NotFound from 'pages/NotFound';
+import { routeCfg, IRouteCfgProps } from './config';
+import './App.less'
+import { totalmem } from 'os';
 
-const App = () => {
+const { Header, Sider, Content } = Layout
+const { SubMenu } = Menu
+
+export function RouteWithSubRoutes(route: IRouteCfgProps) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Route
+      path={route.path}
+      render={props => (
+        <route.component {...props} routes={route.routes} />
+      )}
+    />
+  )
 }
 
-export default App;
+const App: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
+
+  function toggle() {
+    setCollapsed(!collapsed)
+  }
+
+  return (
+    <div className='App'>
+      <Layout>
+        <Sider trigger={null} collapsible collapsed={collapsed}>
+          <div className='logo' />
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={['home']}
+            defaultOpenKeys={['comp']}
+          >
+            {
+              routeCfg.map(routeItem => {
+                if (routeItem.routes) {
+                  return (
+                    <SubMenu
+                      key={routeItem.key}
+                      title={
+                        <span>
+                          {routeItem.icon && <Icon type={routeItem.icon} />}
+                          <span>{routeItem.title}</span>
+                        </span>
+                      }
+                    >
+                      {
+                        routeItem.routes.map(subItem => {
+                          return (
+                            <Menu.Item key={subItem.key}>
+                              <NavLink to={subItem.path}>
+                                {subItem.icon && <Icon type={subItem.icon} />}
+                                <span>{subItem.title}</span>
+                              </NavLink>
+                            </Menu.Item>
+                          )
+                        })
+                      }
+                    </SubMenu>
+                  )
+                } else if (routeItem.component) {
+                  return (
+                    <Menu.Item key={routeItem.key}>
+                      <NavLink to={routeItem.path}>
+                        {routeItem.icon && <Icon type={routeItem.icon} />}
+                        <span>{routeItem.title}</span>
+                      </NavLink>
+                    </Menu.Item>
+                  )
+                }
+                return null;
+              })
+            }
+          </Menu>
+        </Sider>
+        <Layout>
+          <Header>
+            <Icon
+              className='trigger'
+              type={collapsed ? 'menu-unfold' : 'menu-fold'}
+              onClick={toggle}
+            />
+          </Header>
+          <Content className='App-content'>
+            <Switch>
+              {
+                routeCfg.map(route => (
+                  <RouteWithSubRoutes key={route.key} {...route} />
+                ))
+              }
+              <Route component={NotFound} />
+            </Switch>
+          </Content>
+        </Layout>
+      </Layout>
+    </div>
+  )
+}
+
+export default withRouter(App);
