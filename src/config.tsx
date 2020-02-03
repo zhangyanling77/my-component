@@ -1,9 +1,6 @@
 import Home from 'pages/Home';
 import Component from 'pages/Component';
 
-import Home from 'pages/Home';
-import Component from 'pages/Component';
-
 import Card from 'components/card/demo';
 import Descriptions from 'components/descriptions/demo';
 import EmptyLine from 'components/empty-line/demo';

@@ -4,7 +4,6 @@ import { Switch, Route, withRouter, NavLink } from 'react-router-dom';
 import NotFound from 'pages/NotFound';
 import { routeCfg, IRouteCfgProps } from './config';
 import './App.less'
-import { totalmem } from 'os';
 
 const { Header, Sider, Content } = Layout
 const { SubMenu } = Menu

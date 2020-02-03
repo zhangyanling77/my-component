@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Avatar, Statistic, Icon, Row, Col } from 'antd';
-// import { EmptyLine } from 'dantd';
+import { EmptyLine } from 'dantd';
 import { routeCfg } from '../../config';
 import './style.less';
 import img1 from './pic1.png';
@@ -23,7 +23,7 @@ const Home = () => {
   return (
     <div className='p-home'>
       <h3> 组件平台 </h3>
-      {/* <EmptyLine /> */}
+      <EmptyLine />
       <Row>
         <Col span={20}>
             <Meta
@@ -46,3 +46,5 @@ const Home = () => {
     </div>
   )
 }
+
+export default Home;
